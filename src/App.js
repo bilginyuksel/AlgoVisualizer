@@ -1,4 +1,3 @@
-import './App.css';
 import { useEffect, useState } from 'react';
 
 function randomInt(min, max) {
@@ -95,8 +94,9 @@ function App() {
   };
 
   const initPillars = () => {
-    for(let i=0; i<10; i++) pillars.push({val: randomInt(8, 50), color: 'gray'});
-    setPillars([...pillars]);
+    let newPillars = [];
+    for(let i=0; i<10; i++) newPillars.push({val: randomInt(8, 50), color: 'gray'});
+    setPillars(newPillars);
   };
 
   return (
