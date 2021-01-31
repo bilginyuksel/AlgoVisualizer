@@ -9,21 +9,26 @@ function randomPillars(value) {
   return newPillars;
 };
 
+
+
 function App() {
 
   const [pillars, setPillars] = useState(randomPillars(10));
   const [rangeValue, setRangeValue] = useState(10);
+  const [speed, setSpeed] = useState([150]);
+  
+  const sleep = () => {
+    return new Promise(resolve => setTimeout(resolve, speed[0]));
+  };
 
   useEffect(() => {
-  }, [pillars]);
+  }, [pillars, speed]);
 
-  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-  const SLEEP_TIME = 10;
 
   const updateColorSleep = async (idx, color) => {
     pillars[idx].color = color;
     setPillars([...pillars]);
-    await sleep(SLEEP_TIME);
+    await sleep();
   };
   
   const updateColor = (idx, color) => {
@@ -48,7 +53,7 @@ function App() {
           pillars[j].color = 'yellow';
         }
         setPillars([...pillars]);
-        await sleep(SLEEP_TIME);
+        await sleep();
       }
       pillars[pillars.length - 1].color = 'gray';
       const temp = pillars[minIdx];
@@ -77,7 +82,7 @@ function App() {
           pillars[j].color = 'gray';
           pillars[j+1].color = 'red';
           setPillars([...pillars]);
-          await sleep(SLEEP_TIME);
+          await sleep();
         }
       }
       pillars[pillars.length-i-1].color = 'green';
@@ -96,7 +101,7 @@ function App() {
         pillars[idx].color = 'gray';
         pillars[idx-1].color = 'orange';
         setPillars([...pillars]);
-        await sleep(SLEEP_TIME);
+        await sleep();
         idx--;
       }
     }
@@ -105,7 +110,7 @@ function App() {
 
   const controlSorted = async () => {
     clearAll();
-    await sleep(SLEEP_TIME);
+    await sleep();
     for(let i=0; i<pillars.length; i++) {
       await updateColorSleep(i, 'green');
     }
@@ -120,16 +125,24 @@ function App() {
     setPillars(randomPillars(value));
   };
 
+  const speedOnChange = (value) => {
+    speed[0] = parseInt(value);
+    setPillars([...pillars]);
+  };
+
   return (
     <div className="app">
       <div className="input-container">
-        <input type="range" min="5" max="90" value={rangeValue} onChange={(event) => rangeOnChange(event.target.value)}></input>
+        <label htmlFor="array-length">Length</label>
+        <input id="array-length" style={{verticalAlign:'middle'}} type="range" min="5" max="90" value={rangeValue} onChange={(event) => rangeOnChange(event.target.value)}></input>
         <button onClick={selectionSort}>Selection Sort</button>
         <button onClick={bubbleSort}>Bubble Sort</button>
         <button onClick={insertionSort}>Insertion Sort</button>
+        <label htmlFor="speed">Speed</label>
+        <input id="speed" style={{verticalAlign:'middle'}} type="range" min="10" max="1000" step="10" value={speed} onChange={(event) => speedOnChange(event.target.value)}></input>
       </div>
       <div className="container">
-        {pillars.map(pillar => <Pillar value={pillar.val} color={pillar.color}></Pillar>)}
+        {pillars.map((pillar, idx) => <Pillar key={`${idx}-${pillar.val}`} value={pillar.val} color={pillar.color}></Pillar>)}
       </div>
     </div>
   );
