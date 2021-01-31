@@ -18,7 +18,7 @@ function App() {
   const [speed, setSpeed] = useState([150]);
   
   const sleep = () => {
-    return new Promise(resolve => setTimeout(resolve, speed[0]));
+    return new Promise(resolve => setTimeout(resolve, 1000-speed[0]));
   };
 
   useEffect(() => {
@@ -139,7 +139,7 @@ function App() {
         <button onClick={bubbleSort}>Bubble Sort</button>
         <button onClick={insertionSort}>Insertion Sort</button>
         <label htmlFor="speed">Speed</label>
-        <input id="speed" style={{verticalAlign:'middle'}} type="range" min="10" max="1000" step="10" value={speed} onChange={(event) => speedOnChange(event.target.value)}></input>
+        <input id="speed" style={{verticalAlign:'middle'}} type="range" min="0" max="1000" step="10" value={speed} onChange={(event) => speedOnChange(event.target.value)}></input>
       </div>
       <div className="container">
         {pillars.map((pillar, idx) => <Pillar key={`${idx}-${pillar.val}`} value={pillar.val} color={pillar.color}></Pillar>)}
