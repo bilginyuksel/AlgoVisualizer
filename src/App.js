@@ -3,28 +3,42 @@ import { useEffect, useState } from 'react';
 function randomInt(min, max) {
 	return min + Math.floor((max - min) * Math.random());
 }
+function randomPillars(value) {
+  let newPillars = [];
+  for(let i=0; i<value; i++) newPillars.push({val: randomInt(8, 50), color: 'gray'});
+  return newPillars;
+};
 
 function App() {
 
-  const [pillars, setPillars] = useState([]);
+  const [pillars, setPillars] = useState(randomPillars(10));
+  const [rangeValue, setRangeValue] = useState(10);
 
   useEffect(() => {
   }, [pillars]);
 
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-  const SLEEP_TIME = 100;
+  const SLEEP_TIME = 10;
+
+  const updateColorSleep = async (idx, color) => {
+    pillars[idx].color = color;
+    setPillars([...pillars]);
+    await sleep(SLEEP_TIME);
+  };
+  
+  const updateColor = (idx, color) => {
+    pillars[idx].color = color;
+    setPillars([...pillars]);
+  };
 
   const selectionSort = async () => {
     clearAll();
     for (let i = 0; i < pillars.length; i++) {
       let minIdx = i;
-      pillars[i].color = 'blue';
-      setPillars([...pillars]);
-      await sleep(SLEEP_TIME);
+      await updateColorSleep(i, 'blue');
       for (let j = i + 1; j < pillars.length; j++) {
-        if(j-1 !== i && minIdx != j-1) {
-          pillars[j - 1].color = 'gray';
-          setPillars([...pillars]);
+        if(j-1 !== i && minIdx !== j-1) {
+          updateColor(j-1, 'gray');
         }
         if (pillars[minIdx].val > pillars[j].val) {
           if(minIdx !== i) pillars[minIdx].color = 'gray';
@@ -41,17 +55,9 @@ function App() {
       pillars[minIdx] = pillars[i];
       pillars[i] = temp;
       pillars[minIdx].color = 'gray';
-      pillars[i].color = 'green';
-      setPillars([...pillars]);
-      await sleep(SLEEP_TIME);
+      await updateColorSleep(i, 'green');
     }
-    clearAll();
-    await sleep(SLEEP_TIME);
-    for(let i=0; i<pillars.length; i++) {
-      pillars[i].color = 'green'
-      setPillars([...pillars]);
-      await sleep(SLEEP_TIME);
-    }
+    controlSorted();
   };
 
 
@@ -60,13 +66,9 @@ function App() {
     for(let i=0; i<pillars.length; i++) {
       for(let j=0; j<pillars.length-i-1;j++) {
         if(j-1>=0) pillars[j-1].color = 'gray';
-        pillars[j].color = 'blue';
-        setPillars([...pillars]);
-        await sleep(SLEEP_TIME);
+        await updateColorSleep(j, 'blue');
         if(pillars[j].val > pillars[j+1].val) {
-          pillars[j+1].color = 'green';
-          setPillars([...pillars]);
-          await sleep(SLEEP_TIME);
+          await updateColorSleep(j+1, 'green');
           const temp = pillars[j+1];
           pillars[j+1] = pillars[j];
           pillars[j] = temp;
@@ -80,30 +82,52 @@ function App() {
       }
       pillars[pillars.length-i-1].color = 'green';
     }
+    controlSorted();
+  };
+
+  const insertionSort = async () => {
+    clearAll();
+    for(let i=1; i<pillars.length; i++) {
+      let idx = i;
+      while(idx>0 && pillars[idx].val < pillars[idx-1].val) {
+        let temp = pillars[idx];
+        pillars[idx] = pillars[idx-1];
+        pillars[idx-1] = temp;
+        pillars[idx].color = 'gray';
+        pillars[idx-1].color = 'orange';
+        setPillars([...pillars]);
+        await sleep(SLEEP_TIME);
+        idx--;
+      }
+    }
+    controlSorted();
+  };
+
+  const controlSorted = async () => {
     clearAll();
     await sleep(SLEEP_TIME);
     for(let i=0; i<pillars.length; i++) {
-      pillars[i].color = 'green'
-      setPillars([...pillars]);
-      await sleep(SLEEP_TIME);
+      await updateColorSleep(i, 'green');
     }
-  };
+  }
 
   const clearAll = () => {
     setPillars(pillars.map(pillar => pillar.color = 'gray'));
   };
 
-  const initPillars = () => {
-    let newPillars = [];
-    for(let i=0; i<10; i++) newPillars.push({val: randomInt(8, 50), color: 'gray'});
-    setPillars(newPillars);
+  const rangeOnChange = (value) => {
+    setRangeValue(value);
+    setPillars(randomPillars(value));
   };
 
   return (
     <div className="app">
-      <button onClick={selectionSort}>Selection Sort</button>
-      <button onClick={bubbleSort}>Bubble Sort</button>
-      <button onClick={initPillars}>Init me</button>
+      <div className="input-container">
+        <input type="range" min="5" max="90" value={rangeValue} onChange={(event) => rangeOnChange(event.target.value)}></input>
+        <button onClick={selectionSort}>Selection Sort</button>
+        <button onClick={bubbleSort}>Bubble Sort</button>
+        <button onClick={insertionSort}>Insertion Sort</button>
+      </div>
       <div className="container">
         {pillars.map(pillar => <Pillar value={pillar.val} color={pillar.color}></Pillar>)}
       </div>
@@ -114,10 +138,7 @@ function App() {
 function Pillar(props) {
 
   return (
-    <div className="pillar" style={{ height: props.value * 7, width: 30, backgroundColor: props.color }}>
-      <h3 style={{ textAlign: 'center' }}>
-        {props.value}
-      </h3>
+    <div className="pillar" style={{ height: props.value * 7, width: 10, backgroundColor: props.color }}>
     </div>
   );
 }
