@@ -31,6 +31,67 @@ function sleep(time) {
   return new Promise(resolve => setTimeout(resolve, MAX_SLEEP_TIME - time[0]))
 }
 
+class AlgoRunner {
+  constructor() {
+    this.steps = [];
+    this.currentStep = 0;
+    this.speed = 100;
+    this.isStopped = false;
+    this.isStarted = false;
+    this.isPaused = false;
+  }
+
+  buildSteps(array) {
+  }
+
+  stop() {
+    this.isStopped = true;
+    this.isStarted = false;
+    this.isPaused = false;
+    this.currentStep = 0;
+  }
+
+  pause() {
+    this.isPaused = true;
+  }
+
+  // Go back to default values
+  reset() {
+    this.steps = [];
+    this.currentStep = 0;
+    this.speed = 100;
+    this.isStopped = false;
+    this.isStarted = false;
+    this.isPaused = false;
+  }
+
+  // Current step preview...
+  // Don't execute the step and this step can be revertible
+  preview() {
+    this.steps[this.currentStep].execute(); 
+    // sleep for a bit then revert
+    this.steps[this.currentStep].revert();
+  }
+
+  // Revert the last executed step
+  revert() {
+    // Throw an error
+    if(this.currentStep === 0) 
+      return;
+
+    this.steps[--this.currentStep].revert();
+  }
+
+  async play() {
+    while(this.currentStep < this.steps.length) {
+      if(this.isPaused || this.isStopped) break;
+      await this.steps[this.currentStep].execute(); 
+      this.currentStep++;
+    }
+  }
+
+}
+
 export {
   randint,
   getPillar,
@@ -40,5 +101,6 @@ export {
   MIN_PILLAR_VALUE,
   MIN_SLEEP_TIME,
   MAX_PILLAR_VALUE,
-  MAX_SLEEP_TIME
+  MAX_SLEEP_TIME,
+  AlgoRunner,
 };

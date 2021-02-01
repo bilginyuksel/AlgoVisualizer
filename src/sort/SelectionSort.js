@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
-import { getPillars, sleep, getPillarStyles } from './Utils';
+import { getPillars, sleep, getPillarStyles, AlgoRunner } from './Utils';
 
+class SelectionSortAlgoRunner extends AlgoRunner {
+
+  buildSteps(array) {
+
+  }
+
+
+}
 
 function addColorStep(steps, index, color) {
   steps.push({'operation': 'colorize', 'index': index, 'color': color});
