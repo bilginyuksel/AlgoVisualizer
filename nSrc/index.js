@@ -32,18 +32,18 @@ class SelectionSort extends AlgoRunner {
     }
 
     async buildSteps(p) {
-        this.pillars = p;
+        this.pillars = p.slice();
 
-        for(let i=0; i<this.pillars.length; i++) {
+        for(let i=0; i<p.length; i++) {
             let minIdx = i;
             this.addColorStep(i, 'aqua');
-            for(let j=i+1; j<this.pillars.length; j++) {
+            for(let j=i+1; j<p.length; j++) {
                 this.addColorStep(j, 'yellow');
 
                 if(j-1 !== i && minIdx !== j - 1)
                     this.addColorStep(j-1, 'gray');
 
-                if(this.pillars[minIdx].value > this.pillars[j].value) {
+                if(p[minIdx].value > p[j].value) {
                     if(minIdx !== i) this.addColorStep(minIdx, 'gray');
                     minIdx = j;
                     this.addColorStep(minIdx, 'greenyellow');
@@ -51,6 +51,10 @@ class SelectionSort extends AlgoRunner {
                 this.steps.push(new Step('sleep'));
             }
             this.addSwapStep(minIdx, i);
+            // and also swap exactly
+            const temp = p[minIdx];
+            p[minIdx] = p[i];
+            p[i] = temp;
         } 
 
         console.log(JSON.stringify(this.steps));
