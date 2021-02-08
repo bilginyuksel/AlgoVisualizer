@@ -90,9 +90,9 @@ class SelectionSort extends AlgoRunner {
     }
 }
 
-const selectionSort = new SelectionSort('wrapper');
-selectionSort.buildSteps(getRandomPillars())
-selectionSort.play();
+// const selectionSort = new SelectionSort('wrapper');
+// selectionSort.buildSteps(getRandomPillars())
+// selectionSort.play();
 
 function drawCopy(b) {
     const div = document.getElementById('div');

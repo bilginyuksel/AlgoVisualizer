@@ -1,7 +1,9 @@
 const MIN_PILLAR_VALUE = 8;
-const MAX_PILLAR_VALUE = 60;
+const MAX_PILLAR_VALUE = 50;
 const MIN_SLEEP_TIME = 0;
 const MAX_SLEEP_TIME = 1000;
+const MAX_PILLAR_COUNT = 50;
+const MIN_PILLAR_COUNT = 8;
 
 function randint(min, max) {
   return min + Math.floor((max - min) * Math.random());
@@ -19,7 +21,7 @@ function getPillars(count, color = 'gray', min = MIN_PILLAR_VALUE, max = MAX_PIL
   return pillars;
 }
 
-function getPillarStyles(pillar, coef=7, width=10) {
+function getPillarStyles(pillar, coef=3, width=30) {
   return {
     width: width,
     height: pillar.val * coef,
@@ -102,5 +104,7 @@ export {
   MIN_SLEEP_TIME,
   MAX_PILLAR_VALUE,
   MAX_SLEEP_TIME,
+  MAX_PILLAR_COUNT,
+  MIN_PILLAR_COUNT,
   AlgoRunner,
 };

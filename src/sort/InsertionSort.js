@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getPillars, sleep, getPillarStyles } from './Utils';
+import { getPillars, sleep, getPillarStyles, MAX_PILLAR_COUNT, MIN_PILLAR_COUNT } from './Utils';
 
 export default function InsertionSort() {
   const [pillars, setPillars] = useState(getPillars(8));
@@ -85,8 +85,8 @@ export default function InsertionSort() {
         <label htmlFor="count-range">Count</label>
         <input id="count-range"
           type="range"
-          min="6"
-          max="80"
+          min={`${MIN_PILLAR_COUNT}`}
+          max={`${MAX_PILLAR_COUNT}`}
           step="1"
           value={count}
           onChange={onPillarCountChanged}>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getPillars, getPillar, sleep, getPillarStyles, MIN_PILLAR_VALUE, MAX_PILLAR_VALUE } from './Utils';
+import { getPillars, getPillar, sleep, getPillarStyles , MAX_PILLAR_COUNT, MIN_PILLAR_COUNT } from './Utils';
 
 export default function CountingSort() {
   const [pillars, setPillars] = useState(getPillars(8));
@@ -77,7 +77,7 @@ export default function CountingSort() {
         {pillars.map((pillar, idx) => (
           <div className="pillar"
             key={`${idx}-${pillar.val}`}
-            style={getPillarStyles(pillar, 5)}>
+            style={getPillarStyles(pillar)}>
           </div>))}
       </div>
 
@@ -87,7 +87,7 @@ export default function CountingSort() {
             {freqPillar.freq}
             <div className="pillar"
               key={`${idx}-${freqPillar.val}-${freqPillar.freq}`}
-              style={getPillarStyles(freqPillar, 3)}>
+              style={getPillarStyles(freqPillar)}>
             </div>
           </div>
         ))}
@@ -107,8 +107,8 @@ export default function CountingSort() {
         <label htmlFor="count-range">Count</label>
         <input id="count-range"
           type="range"
-          min="6"
-          max="80"
+          min={`${MIN_PILLAR_COUNT}`}
+          max={`${MAX_PILLAR_COUNT}`}
           step="1"
           value={count}
           onChange={onPillarCountChanged}>
